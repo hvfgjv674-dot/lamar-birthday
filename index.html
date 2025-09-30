@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>عيد ميلاد لمار — العد التنازلي</title>
+<style>
+  :root{
+    --bg:#0f1724;     /* خلفية داكنة */
+    --panel:#0b1220;
+    --accent:#00e0ff; /* لون نيون سماوي */
+    --accent2:#ff49a1; /* وردي */
+    --muted:#98a0b3;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: "Segoe UI", Tahoma, Helvetica, "Noto Kufi Arabic", "Cairo", monospace;
+    background:
+      radial-gradient(1200px 500px at 10% 10%, rgba(0,224,255,0.04), transparent 8%),
+      radial-gradient(1000px 400px at 90% 90%, rgba(255,73,161,0.03), transparent 8%),
+      var(--bg);
+    color:#e6eef7;
+    padding:28px;
+  }
+
+  .card{
+    width:100%;
+    max-width:900px;
+    border-radius:14px;
+    padding:28px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 10px 40px rgba(2,6,23,0.7);
+    border: 1px solid rgba(255,255,255,0.03);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* header */
+  .head{
+    display:flex;
+    gap:18px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .brand{
+    display:flex; gap:12px; align-items:center;
+  }
+  .logo{
+    width:64px; height:64px; border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#02101a; font-size:20px; box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  }
+  .title{
+    display:flex; flex-direction:column;
+    line-height:1;
+  }
+  .title .big{font-size:20px; font-weight:700; color: #fff}
+  .title .sub{color:var(--muted); font-size:13px; margin-top:4px}
+
+  .right-controls{display:flex; gap:10px; align-items:center;}
+  .btn{
+    background:var(--glass); border:1px solid rgba(255,255,255,0.04);
+    padding:8px 12px; border-radius:10px; color:var(--accent);
+    font-weight:600; cursor:pointer; font-size:13px;
+  }
+
+  /* body layout */
+  .body-grid{
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:22px;
+    align-items:center;
+  }
+
+  /* left: big clock + message */
+  .clock-panel{
+    padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .heading{
+    display:flex; align-items:center; gap:12px; margin-bottom:10px;
+  }
+  .heading h2{margin:0; font-size:20px; color:#fff}
+  .heading p{margin:0; color:var(--muted); font-size:13px}
+
+  .big-counter{
+    display:flex; gap:12px; align-items:center; justify-content:flex-start;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+  .unit{
+    min-width:120px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);
+    border-radius:12px;
+    padding:14px 18px;
+    border:1px solid rgba(255,255,255,0.02);
+    box-shadow: inset 0 -6px 18px rgba(0,0,0,0.4);
+  }
+  .u-label{font-size:13px; color:var(--muted); margin-bottom:6px}
+  .u-value{font-size:32px; font-weight:800; color:var(--accent); letter-spacing:1px}
+
+  /* progress ring row */
+  .progress-row{margin-top:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .pr{
+    flex:1;
+    min-width:150px;
+    background:rgba(255,255,255,0.02);
+    padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.02);
+  }
+  .pr .label{font-size:12px; color:var(--muted)}
+  .bar{
+    height:10px; background:rgba(0,0,0,0.15); border-radius:8px; margin-top:8px; overflow:hidden;
+  }
+  .bar > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.6s ease}
+
+  /* right panel */
+  .side{
+    padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    border:1px solid rgba(255,255,255,0.02);
+    display:flex; flex-direction:column; gap:12px; align-items:center;
+  }
+  .side h3{margin:6px 0 2px 0; color:#fff}
+  .side p{margin:0; color:var(--muted); font-size:13px; text-align:center}
+  .countdown-circle{
+    width:220px; height:220px; border-radius:50%; display:grid; place-items:center;
+    background: conic-gradient(var(--accent) 0deg, rgba(255,255,255,0.02) 0deg);
+    position:relative; margin-top:10px;
+  }
+  .countdown-circle .center{
+    width:160px; height:160px; border-radius:50%; background:var(--panel);
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    border:6px solid rgba(255,255,255,0.02);
+  }
+  .center .num{font-size:28px; font-weight:800; color:var(--accent)}
+  .center .lbl{font-size:12px; color:var(--muted); margin-top:6px}
+
+  /* celebration overlay */
+  .overlay{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    background: linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));
+    z-index:40; flex-direction:column; gap:14px; padding:28px;
+  }
+  .overlay.show{display:flex}
+  .overlay h1{font-size:36px; margin:0; color:var(--accent2)}
+  .overlay p{margin:0; color:#fff; font-size:18px}
+
+  /* responsive */
+  @media (max-width:880px){
+    .body-grid{grid-template-columns:1fr; }
+    .side{order:-1}
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="head">
+      <div class="brand">
+        <div class="logo">C++</div>
+        <div class="title">
+          <div class="big">عيد ميلاد لمار</div>
+          <div class="sub">عداد احترافي — توقيت ليبيا (UTC+2)</div>
+        </div>
+      </div>
+
+      <div class="right-controls">
+        <button class="btn" id="previewBtn">معاينة</button>
+        <button class="btn" id="copyBtn">انسخ كود</button>
+      </div>
+    </div>
+
+    <div class="body-grid">
+      <div class="clock-panel">
+        <div class="heading">
+          <h2>⏳ العد التنازلي حتى منتصف الليل</h2>
+          <p>يحسب بتوقيت ليبيا (UTC+2) مهما كان مكان المشاهد</p>
+        </div>
+
+        <div class="big-counter" id="bigCounter">
+          <div class="unit">
+            <div class="u-label">أيام</div>
+            <div class="u-value" id="days">00</div>
+          </div>
+          <div class="unit">
+            <div class="u-label">ساعات</div>
+            <div class="u-value" id="hours">00</div>
+          </div>
+          <div class="unit">
+            <div class="u-label">دقائق</div>
+            <div class="u-value" id="minutes">00</div>
+          </div>
+          <div class="unit">
+            <div class="u-label">ثواني</div>
+            <div class="u-value" id="seconds">00</div>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <div class="pr">
+            <div class="label">نسبة اليوم</div>
+            <div class="bar"><i id="dayBar"></i></div>
+          </div>
+          <div class="pr">
+            <div class="label">نسبة الساعة</div>
+            <div class="bar"><i id="hourBar"></i></div>
+          </div>
+          <div class="pr">
+            <div class="label">نسبة الدقيقة</div>
+            <div class="bar"><i id="minBar"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <h3>لمار 🎂</h3>
+        <p>كل سنة وهي طيبة — استعدوا للاحتفال عند منتصف الليلة!</p>
+
+        <div class="countdown-circle" id="ring">
+          <div class="center">
+            <div class="num" id="mainNum">00</div>
+            <div class="lbl">ساعات متبقية</div>
+          </div>
+        </div>
+
+        <div style="width:100%; text-align:center; margin-top:14px">
+          <button class="btn" id="shareBtn">شارك الرابط (بعد الرفع)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+      <h1>🎉 عيد ميلاد لمار 🎉</h1>
+      <p>كل سنة وانتي طيبة — يومك جه! ❤</p>
+      <canvas id="confetti" width="800" height="400" style="width:100%; max-width:860px; border-radius:12px;"></canvas>
+      <audio id="audio" src="" preload="none"></audio>
+      <div style="margin-top:8px;">
+        <button class="btn" id="closeOverlay">اغلاق</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ====== Helper: Libya time (UTC+2) ====== */
+function libyaNowMs(){
+  const now = new Date();
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const libyaOffsetMinutes = 2 * 60; // UTC+2
+  return utc + libyaOffsetMinutes*60000;
+}
+
+function libyaMidnightMs(){
+  const ms = libyaNowMs();
+  const d = new Date(ms);
+  // تحديد منتصف الليل لليوم التالي بتوقيت ليبيا
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()+1,0,0,0).getTime();
+}
+
+/* ====== Countdown logic ====== */
+let target = libyaMidnightMs();
+const daysEl = document.getElementById('days');
+const hoursEl = document.getElementById('hours');
+const minsEl = document.getElementById('minutes');
+const secsEl = document.getElementById('seconds');
+const mainNum = document.getElementById('mainNum');
+
+const dayBar = document.getElementById('dayBar');
+const hourBar = document.getElementById('hourBar');
+const minBar = document.getElementById('minBar');
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function updateCountdown(){
+  const nowMs = libyaNowMs();
+  let distance = target - nowMs;
+  if(distance < 0){
+    // إذا وصل الوقت أو فات، يتم إعادة تعيين الهدف لمنتصف ليل اليوم التالي
+    // هذا مهم حتى تستمر الشاشة في العمل حتى بعد الوصول إلى الصفر
+    target = libyaMidnightMs(); // تحديث الهدف لمنتصف ليل اليوم التالي
+    distance = target - nowMs; // حساب المسافة مرة أخرى
+    
+    // إذا كان الفرق لا يزال سالبًا (حالة نادرة)، اضبطه على صفر
+    if(distance < 0) {
+        distance = 0;
+    }
+
+  }
+
+  const days = Math.floor(distance / (1000*60*60*24));
+  const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+  daysEl.textContent = pad(days);
+  hoursEl.textContent = pad(hours);
+  minsEl.textContent = pad(minutes);
+  secsEl.textContent = pad(seconds);
+
+  mainNum.textContent = pad(hours);
+
+  // progress percentages
+  // نحسب التقدم بناءً على عدد الساعات والدقائق والثواني المتبقية من اليوم الحالي
+  const totalSecondsInDay = 24 * 60 * 60;
+  const remainingSeconds = (hours * 3600) + (minutes * 60) + seconds;
+  const elapsedSeconds = totalSecondsInDay - remainingSeconds;
+  
+  // نسبة اليوم (النسبة التي مرت من اليوم الحالي)
+  const dayProgress = (elapsedSeconds / totalSecondsInDay) * 100;
+  // نسبة الساعة (النسبة التي مرت من الساعة الحالية)
+  const hourProgress = ((60 - minutes - seconds/60) / 60) * 100; 
+  // نسبة الدقيقة (النسبة التي مرت من الدقيقة الحالية)
+  const minProgress = ((60 - seconds) / 60) * 100;
+
+  dayBar.style.width = Math.max(0, Math.min(100, dayProgress)) + '%';
+  hourBar.style.width = Math.max(0, Math.min(100, hourProgress)) + '%';
+  minBar.style.width = Math.max(0, Math.min(100, minProgress)) + '%';
+
+  // update conic gradient for ring (use remaining hours ratio)
+  const ring = document.getElementById('ring');
+  // نسبة الوقت المتبقي في اليوم (كسر من 360 درجة)
+  const hoursRatio = remainingSeconds / totalSecondsInDay; 
+  const deg = Math.round(hoursRatio * 360);
+  // عكس الاتجاه: يبدأ من 360 درجة (اللون كامل) ويقل مع مرور الوقت
+  const actualDeg = 360 - deg;
+  ring.style.background = `conic-gradient(var(--accent) ${actualDeg}deg, rgba(255,255,255,0.02) ${actualDeg}deg)`;
+
+
+  if(distance <= 0){
+    // reached midnight
+    // بدلاً من إيقاف المؤقت، نعرض الاحتفال لبرهة ثم يستمر في العد لليوم التالي
+    showCelebration();
+    // نترك المؤقت مستمرًا (setInterval) ليتم تحديث الهدف لليوم التالي تلقائياً
+  }
+}
+
+
+updateCountdown();
+// يتم تحديثه كل ثانية (1000 ميللي ثانية)
+const interval = setInterval(updateCountdown, 1000);
+
+/* ====== Celebration (simple confetti) ====== */
+const overlay = document.getElementById('overlay');
+const confettiCanvas = document.getElementById('confetti');
+const ctx = confettiCanvas.getContext('2d');
+let confettiPieces = [];
+
+function random(min,max){ return Math.random()*(max-min)+min; }
+
+function spawnConfetti(){
+  confettiPieces = [];
+  const w = confettiCanvas.width = confettiCanvas.clientWidth * 1;
+  const h = confettiCanvas.height = 300;
+  for(let i=0;i<140;i++){
+    confettiPieces.push({
+      x: random(0,w),
+      y: random(-h,0),
+      r: random(6,12),
+      d: random(4,10),
+      color: i%2? '#ff49a1' : '#00e0ff',
+      tilt: random(-15,15),
+      tiltSpeed: random(0.05,0.2)
+    });
+  }
+  animateConfetti();
+}
+
+let confAnim = null;
+function animateConfetti(){
+  if(!confettiCanvas || !overlay.classList.contains('show')) {
+      confAnim = null;
+      return;
+  }
+  ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  for(let p of confettiPieces){
+    p.y += p.d;
+    p.tilt += p.tiltSpeed;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.tilt * Math.PI/180);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+    ctx.restore();
+    if(p.y > confettiCanvas.height + 20){
+      p.y = random(-200, -10);
+      p.x = random(0, confettiCanvas.width);
+    }
+  }
+  confAnim = requestAnimationFrame(animateConfetti);
+}
+
+// مؤقت لإخفاء الاحتفال تلقائياً بعد مدة
+let autoCloseTimer = null;
+function showCelebration(){
+  // منع الفتح المتكرر للاحتفال في تحديثات الثواني المتتالية بعد منتصف الليل
+  if(overlay.classList.contains('show')) return;
+  
+  overlay.classList.add('show');
+  spawnConfetti();
+  
+  // إغلاق تلقائي بعد 10 ثواني (يمكن تغييره)
+  clearTimeout(autoCloseTimer);
+  autoCloseTimer = setTimeout(()=>{
+    overlay.classList.remove('show');
+    if(confAnim) cancelAnimationFrame(confAnim);
+  }, 10000); 
+
+  // try play a short beep melody (autoplay may be blocked on some browsers)
+  try{
+    const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctxAudio.createOscillator();
+    const g = ctxAudio.createGain();
+    o.type = 'sine';
+    o.frequency.value = 880;
+    g.gain.value = 0.0015;
+    o.connect(g);
+    g.connect(ctxAudio.destination);
+    o.start();
+    // stop after 800ms with a small envelope
+    setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.00001, ctxAudio.currentTime + 0.2); o.stop(ctxAudio.currentTime + 0.22); }, 800);
+  }catch(e){ /* ignore audio errors */ }
+}
+
+/* close overlay */
+document.getElementById('closeOverlay').addEventListener('click', ()=>{
+  overlay.classList.remove('show');
+  if(confAnim) cancelAnimationFrame(confAnim);
+  clearTimeout(autoCloseTimer); // إيقاف الإغلاق التلقائي
+});
+
+/* copy code button behavior: copy HTML to clipboard for quick upload */
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  // حذف وسم الـ <script> الخاص بالاحتفال مؤقتاً لتجنب تكرار الكود عند النسخ
+  const scriptElement = document.querySelector('script');
+  const scriptContent = scriptElement.outerHTML;
+  scriptElement.remove(); 
+  
+  const html = `\n` + document.documentElement.outerHTML;
+  
+  // إعادة وسم الـ <script>
+  document.body.appendChild(scriptElement);
+
+  try{
+    await navigator.clipboard.writeText(html);
+    alert('الكود انسخ! افتح مفكرة والصقها واحفظ باسم index.html');
+  }catch(e){
+    alert('فشل النسخ تلقائياً، حاول نسخه يدوياً من الصفحة.');
+  }
+});
+
+/* preview button: open a new window with the same HTML (works in browser desktop/mobile that يسمح) */
+document.getElementById('previewBtn').addEventListener('click', ()=>{
+  const html = '<!doctype html>' + document.documentElement.outerHTML;
+  const w = window.open();
+  if(!w){ alert('فشل فتح معاينة. تحقق من السماح بنوافذ منبثقة.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+});
+
+/* shareBtn hint */
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  alert('بعد ما ترفع الملف على Netlify/CodePen انسخ اللينك هنا وابدأ تشاركه ❤️');
+});
+
+/* make overlay clickable when user taps anywhere to close (mobile friendly) */
+overlay.addEventListener('click', (e)=>{
+  if(e.target === overlay) { 
+    overlay.classList.remove('show'); 
+    if(confAnim) cancelAnimationFrame(confAnim); 
+    clearTimeout(autoCloseTimer);
+  }
+});
+</script>
+</body>
+</html>
